@@ -8,7 +8,11 @@ using System.Reflection;
 using Microsoft.AspNet.OData.Common;
 using Microsoft.AspNet.OData.Interfaces;
 using Microsoft.AspNetCore.Mvc.Controllers;
+#if NETSTANDARD2_0
 using Microsoft.AspNetCore.Mvc.Internal;
+#else
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
+#endif
 
 namespace Microsoft.AspNet.OData.Adapters
 {

@@ -8,11 +8,16 @@ using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNet.OData.Routing.Conventions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+#if NETSTANDARD2_0
+using Microsoft.AspNetCore.Mvc.Internal;
+#else
+using Microsoft.AspNet.OData.Routing.Internal;
+#endif
 
 namespace Microsoft.AspNet.OData.Routing
 {
@@ -32,10 +37,11 @@ namespace Microsoft.AspNet.OData.Routing
         /// <param name="loggerFactory">ILoggerFactory instance from dependency injection.</param>
         public ODataActionSelector(
             IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
-            ActionConstraintCache actionConstraintProviders,
+            IEnumerable<IActionConstraintProvider> actionConstraintProviders,
             ILoggerFactory loggerFactory)
         {
-            _innerSelector = new ActionSelector(actionDescriptorCollectionProvider, actionConstraintProviders, loggerFactory);
+            var actionConstraintCache = new ActionConstraintCache(actionDescriptorCollectionProvider, actionConstraintProviders);
+            _innerSelector = new ActionSelector(actionDescriptorCollectionProvider, actionConstraintCache, loggerFactory);
         }
 
         /// <inheritdoc />
@@ -167,4 +173,7 @@ namespace Microsoft.AspNet.OData.Routing
             public IList<ParameterDescriptor> FilteredParameters { get; private set; }
         }
     }
+
+  
 }
+
