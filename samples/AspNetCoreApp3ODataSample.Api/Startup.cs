@@ -30,6 +30,12 @@ namespace AspNetCoreApp3ODataSample.Api
             services.AddDbContext<MovieContext>(opt => opt.UseInMemoryDatabase("MovieList"));
             services.AddOData();
             services.AddMvc(opt => opt.EnableEndpointRouting = false);
+            //IIS enable AllowSynchronousIO
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +47,7 @@ namespace AspNetCoreApp3ODataSample.Api
             }
 
             var model = EdmModelBuilder.GetEdmModel();
-
+;
             app.UseMvc(builder =>
             {
                 builder.Select().Expand().Filter().OrderBy().MaxTop(100).Count();

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AspNetCoreApp3ODataSample.Web.Models;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Http;
@@ -100,8 +101,9 @@ namespace AspNetCoreApp3ODataSample.Web.Controllers
         }
 
         [EnableQuery]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
+            await Task.CompletedTask;
 
             if (Request.Path.Value.Contains("efcore"))
             {
@@ -111,12 +113,12 @@ namespace AspNetCoreApp3ODataSample.Web.Controllers
             {
                 return Ok(_inMemoryMovies);
             }
+
         }
 
         [EnableQuery]
         public IActionResult Get(int key)
         {
-            Request.EnableBuffering();
 
             Movie m;
             if (Request.Path.Value.Contains("efcore"))
